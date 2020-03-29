@@ -74,7 +74,7 @@ for(a=0;a<totalProcess;a++){
         queuea[pos]=code;
     }
     time=queuea[0].arrival_time;
-    //traversing queue and checking if the current position is less than equal to the ath index of queue
+    //traversing queue and checking if the current position is less than equal to the ath index of queuea
     for(a=0;totalProcess!=0;a++)
     {
     	while(count!=t1)
@@ -114,19 +114,53 @@ for(a=0;a<totalProcess;a++){
 				count=t1;break;
 			}
 		}
-	     count=0;
-                //traversing via burst times to finish every process
-                if(queuea[a].burst_time!=0)
-                {
-                        queueb[pf2]=queuea[a];
-                        pf2++;
-                        for(c=a;c<totalProcess-1;c++)
-                        queuea[c]=queuea[c+1];
-                totalProcess--;
-                }
-                        if(a==totalProcess-1)
-                                a=-1;
-        }
+		count=0;
+		//traversing via burst times to finish every process
+		if(queuea[a].burst_time!=0)
+		{
+			queueb[pf2]=queuea[a];
+			pf2++;
+			for(c=a;c<totalProcess-1;c++)
+    			queuea[c]=queuea[c+1];
+    		totalProcess--;
+		}
+			if(a==totalProcess-1)
+				a=-1;
+	}
+	//traversing the second queue with burst time
+	totalProcess2=pf2;
+	for(count=0;totalProcess2!=0;) 
+	{ 
+		if(queueb[count].burst_time<=t2&&queueb[count].burst_time>0) 
+    	{ 
+    		time+=queueb[count].burst_time; 
+    		queueb[count].burst_time=0; 
+    		flag=1; 
+    	} 
+    	else if(queueb[count].burst_time>0) 
+    	{ 
+    		queueb[count].burst_time-=t2; 
+    		time+=t2; 
+    	} 
+    	if(queueb[count].burst_time==0&&flag==1) 
+    	{ 
+		//calculating turnaround time and waiting time 
+    		totalProcess2--; 
+    		queueb[count].turning_time=time-queueb[count].arrival_time;
+			queueb[count].waiting_time=queueb[count].turning_time-queueb[count].burst_time_copy; 
+			printf("%d\t|\t%d\t|\t%d\n",queueb[count].process_name,queueb[count].turning_time,queueb[count].waiting_time); 
+    		turnaround_time+=time-queueb[count].arrival_time; 
+    		wait_time+=time-queueb[count].arrival_time-queueb[count].burst_time_copy;
+    		for(c=count;c<totalProcess2;c++)
+    			queueb[c]=queueb[c+1];count--;
+    		flag=0; 
+    	} 
 
-	   return 0;
+    	if(count==totalProcess2-1) 
+      		count=0; 
+    	else 
+    		count++; 
     }
+printf("\nAVERAGE WAITING TIME = %f\n",wait_time*1.0/n); 
+printf("AVERAGE TURNAROUND TIME = %f",turnaround_time*1.0/n);   
+}
