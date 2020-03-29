@@ -114,5 +114,19 @@ for(a=0;a<totalProcess;a++){
 				count=t1;break;
 			}
 		}
+	     count=0;
+                //traversing via burst times to finish every process
+                if(queuea[a].burst_time!=0)
+                {
+                        queueb[pf2]=queuea[a];
+                        pf2++;
+                        for(c=a;c<totalProcess-1;c++)
+                        queuea[c]=queuea[c+1];
+                totalProcess--;
+                }
+                        if(a==totalProcess-1)
+                                a=-1;
+        }
+
 	   return 0;
     }
