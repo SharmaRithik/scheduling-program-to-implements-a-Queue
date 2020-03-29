@@ -75,6 +75,44 @@ for(a=0;a<totalProcess;a++){
     }
     time=queuea[0].arrival_time;
     //traversing queue and checking if the current position is less than equal to the ath index of queue
-        
-      return 0;
-}
+    for(a=0;totalProcess!=0;a++)
+    {
+    	while(count!=t1)
+    	{
+    	//traversing the queue according to the arrival time and priority
+		count++;
+    		if(queuea[a].arrival_time<=time)
+    		{
+    			for(b=a+1;b<totalProcess;b++)
+    			{
+    				if(queuea[b].arrival_time==time&&queuea[b].priority<queuea[a].priority)
+    				{
+    					queueb[pf2]=queuea[a];
+						pf2++;
+    					for(c=a;c<totalProcess-1;c++)
+    						queuea[c]=queuea[c+1];
+    					totalProcess--;
+						count=0;
+    					a=b-1;
+    					b--;
+					}
+				}
+			}
+			time++;
+			queuea[a].burst_time--;
+			if(queuea[a].burst_time==0)
+			{//finding turn around time = time taken - arriavl time
+			//analysing the waiting time = turning time - burst time 
+				queuea[a].turning_time=time-queuea[a].arrival_time;
+				queuea[a].waiting_time=queuea[a].turning_time-queuea[a].burst_time_copy;
+				printf("%d\t|\t%d\t|\t%d\n",queuea[a].process_name,queuea[a].turning_time,queuea[a].waiting_time);
+				wait_time+=time-queuea[a].arrival_time-queuea[a].burst_time_copy; 
+    			turnaround_time+=time-queuea[a].arrival_time;
+    			for(c=a;c<totalProcess-1;c++)
+    				queuea[c]=queuea[c+1];a--;
+    			totalProcess--;
+				count=t1;break;
+			}
+		}
+	   return 0;
+    }
